@@ -55,12 +55,19 @@ function [A,B,C,Da,Db,Va,Vb,hist,MU] = OSNNCPD1_gradientNadam(T,R,Dat0,Dbt0,Vat0
 % Modification Date: 11/07/2022
 
 %% Default parameters
-if nargin < 5 || isempty(options)
-    options = creerOptions(1, 1, 5, 0.9, 0.9, 1e-3);
+if nargin < 6 || isempty(options)
+    options = createOptions(1, 1, 5, 0.9, 0.9, 1e-3);
 end
 
 %% Identify indices from previous atoms Vat0
-ind = find(Vat0 > 0);
+ind= [];
+for i=1:size(Vat0,1)
+    for j=1:size(Vat0,2)
+        if Vat0(i,j) > 0
+            ind = [ind,i];
+        end
+    end
+end
 
 % Normalize the tensor
 [T, norma] = normalisation_tenseur2(T);
@@ -85,17 +92,17 @@ Va = eye(R, R);
 Vb = eye(R, R);
 
 % NADAM parameters (momentum 1 & 2)
-M_va = zeros(R, R);
-M_vb = zeros(R, R);
-M_c = zeros(size(T, 3), R);
-M_da = zeros(size(T, 1), R);
-M_db = zeros(size(T, 2), R);
+M_va=zeros(R,R);
+M_vb =zeros(R,R);
+M_c =zeros(size(T,3),R);
+M_da =zeros(size(T,1),R);
+M_db = zeros(size(T,2),R);
 
-Mm_va = zeros(R, R);
-Mm_vb = zeros(R, R);
-Mm_c = zeros(size(T, 3), R);
-Mm_da = zeros(size(T, 1), R);
-Mm_db = zeros(size(T, 2), R);
+Mm_va=zeros(R,R);
+Mm_vb =zeros(R,R);
+Mm_c =zeros(size(T,3),R);
+Mm_da =zeros(size(T,1),R);
+Mm_db = zeros(size(T,2),R);
 
 % L1 norm derivative
 l1_va = ones(size(Va));
@@ -115,18 +122,20 @@ end
 
 while (relerr1 > crit && itTot < maxit)
     itTot = itTot + 1;
-
     % Compute gradient
     [G_da, G_db, G_c, G_va, G_vb] = compute_gradient(T1, T2, T3, Da, Db, Va, Vb, C, l1_va, l1_vb, options.cas, options.alpha);
 
+    
     % Zero-out gradients for the indices corresponding to the previous atoms
     G_da(:, ind) = 0;
     G_db(:, ind) = 0;
+    
 
     % NADAM parameter update
     M_va = options.beta1 * M_va + (1 - options.beta1) * G_va;
     M_vb = options.beta1 * M_vb + (1 - options.beta1) * G_vb;
     M_c = options.beta1 * M_c + (1 - options.beta1) * G_c;
+
     M_da = options.beta1 * M_da + (1 - options.beta1) * G_da;
     M_db = options.beta1 * M_db + (1 - options.beta1) * G_db;
 
