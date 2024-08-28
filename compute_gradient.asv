@@ -1,0 +1,54 @@
+function [G_da,G_db,G_c,G_va,G_vb] = compute_gradient(T1,T2,T3,Da,Db,Va,Vb,C,l1_va,l1_vb,penalite,alpha)
+%% calcul du gradient de la fonction de cout
+
+% ----------------------INPUT---------------------
+%T1,T2, T3 :Tenseur deplier suivant le mode 1,2,3,
+%Da, Db : Dictionnaires 
+% C matrice facteur
+%Va,Vb : poids ou atomes
+% cas 0 : pas de parcimonie. Dans ce cas R est connu
+% Cas 1 : L1 norme sur VA,VB. Dans ce cas R est inconnu et il est
+            % surestimé( par defaut)
+            %alpha: Coefficient de pénalité
+    % penalité : 1= norme l1 et 2=norme mixte 
+    % step = pas du proximal
+    
+%% Initialisation
+L1 = pkr(C,Db*Vb);
+L2 = pkr(Da*Va,C);
+L3 = pkr(Db*Vb,Da*Va);
+
+
+
+%% choix de la penalite
+if penalite == 0    
+    % calcul de G_da, G_va
+    G_da = -T1 * L1*Va' + Da*Va*(L1)'*L1*Va';
+    G_va = - Da' * (-Da * Va * L1' + T1) * L1 ;
+
+    % calcul de G_db,G_vb
+    G_db = -T2 * L2*Vb' + Db*Vb*(L2)'*L2*Vb';
+    G_vb = - Db' * (-Db * Vb * L2' + T2) * L2 ;    
+    % calcul de G_c
+    G_c = -T3*L3 + C*(L3)'*L3;    
+% 
+% 
+end
+
+if penalite == 1    
+
+    % calcul de G_da, G_va
+    G_da = -T1 * L1*Va' + Da*Va*(L1)'*L1*Va';
+     G_va = - Da' * (-Da * Va * L1' + T1) * L1 ;
+    G_va = G_va + alpha*(l1_va); % derivée de (vb) + derive de L1 norme de (vb) 
+
+    % calcul de G_db,G_vb
+    G_db = -T2 * L2*Vb' + Db*Vb*(L2)'*L2*Vb';
+    G_vb = - Db' * (-Db * Vb * L2' + T2) * L2 ;  
+    G_vb = G_vb + alpha*(l1_vb);%  - (Vb_id - Vb);
+    
+    % calcul de G_c
+    G_c = -T3*L3 + C*(L3)'*L3;    
+% 
+end
+
