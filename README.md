@@ -100,6 +100,42 @@ R = 7; % Example rank
 % Initialize the algorithm with the first tensor
 [A0, B0, C0, Da0, Db0, Va0, Vb0, hist, MU] = OSNNCPD1_gradientNadam(T0, R);
 
+## OSNNCPD2 - Online Sparse Non-Negative Canonical Polyadic Decomposition (Version 2)
+## Overview
+
+The OSNNCPD2 function implements the second version of the Online Sparse Non-Negative Canonical Polyadic Decomposition (CPD) algorithm. This method is designed for the dynamic decomposition of 3rd-order tensors, where the tensor data arrives sequentially over time. The algorithm updates the factor matrices online, allowing for the decomposition of large-scale data without needing to recompute the entire model at each time step.
+
+This method leverages dictionary learning and the NADAM optimizer (a variant of stochastic gradient descent) to ensure efficient convergence while enforcing sparsity and non-negativity constraints.
+Key Features
+
+    Online Decomposition: Efficiently updates factor matrices as new tensor data arrives.
+    Non-Negativity Constraint: Ensures that the factor matrices remain non-negative, which is crucial for certain types of data such as fluorescence spectra.
+    Sparsity Regularization: Supports L1 norm regularization on the factor matrices to enforce sparsity, useful when the true rank is unknown and overestimated.
+    NADAM Optimizer: Combines Adam with Nesterov momentum for improved convergence and stability.
+
+[A, B, C, Ua, Ub, Da, Db, Va, Vb, hist, MU] = OSNNCPD2_gradientNadam(T, R, Dat0, Dbt0, Vat0, Vbt0, options)
+Parameters
+
+    T: (3rd-order tensor) The input tensor to be decomposed.
+    R: (integer) The rank of the decomposition.
+    Dat0, Dbt0: (matrices) Dictionaries obtained at the previous time step.
+    Vat0, Vbt0: (matrices) Atoms obtained at the previous time step.
+    options: (struct) Optional parameters for the algorithm:
+        cas: 0 for no sparsity (R is known), 1 for sparsity with L1 norm on Va, Vb (R is unknown and overestimated).
+        alpha: Penalty coefficient for the L1 norm.
+        nonnegativite: 0 for no non-negativity constraint, 1 to enforce non-negativity.
+        beta1, beta2: Momentum parameters for the NADAM optimizer.
+        step: Learning rate for the optimization process.
+
+Returns
+
+    A, B, C: (matrices) Factor matrices of the decomposition.
+    Ua, Ub: (matrices) Transformation matrices for the factor matrices.
+    Da, Db: (matrices) Updated dictionaries.
+    Va, Vb: (matrices) Updated atoms or weights.
+    hist: (vector) Relative reconstruction error for each iteration.
+    MU: (vector) Learning rate for each iteration.
+
 
 ## References
 @article{sanou2024online,
