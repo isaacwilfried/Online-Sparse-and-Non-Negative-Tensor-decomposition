@@ -63,7 +63,7 @@ param_grid.alpha = [0.1, 0.5, 1.0];
 % The best parameters found
 disp(best_params);
 
-## Online Sparse Non-Negative CPD (OSNNCPD1)
+# Online Sparse Non-Negative CPD (OSNNCPD1)
 
 ### Overview
 
@@ -100,7 +100,7 @@ R = 7; % Example rank
 % Initialize the algorithm with the first tensor
 [A0, B0, C0, Da0, Db0, Va0, Vb0, hist, MU] = OSNNCPD1_gradientNadam(T0, R);
 
-## OSNNCPD2 - Online Sparse Non-Negative Canonical Polyadic Decomposition (Version 2)
+# OSNNCPD2 - Online Sparse Non-Negative Canonical Polyadic Decomposition (Version 2)
 ## Overview
 
 The OSNNCPD2 function implements the second version of the Online Sparse Non-Negative Canonical Polyadic Decomposition (CPD) algorithm. This method is designed for the dynamic decomposition of 3rd-order tensors, where the tensor data arrives sequentially over time. The algorithm updates the factor matrices online, allowing for the decomposition of large-scale data without needing to recompute the entire model at each time step.
