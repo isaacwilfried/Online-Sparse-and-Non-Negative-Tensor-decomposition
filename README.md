@@ -45,9 +45,52 @@ load('your_tensor_data.mat'); % Assume the tensor is stored in a variable called
 R = 7; % Example rank
 
 % Set the options for SNNCPD
-options = creerOptions(1, 1, 1.5, 0.9, 0.9, 1e-3);
+options = createOptions(1, 1, 1.5, 0.9, 0.9, 1e-3);
 
 % Perform the decomposition
 [A, B, C, Da, Db, Va, Vb, hist, MU] = SNNCPD_gradientNadam(X, R, options);
+displaycomponent(A, B, 4); % Display the first 4 components
+
+% Define a grid of parameters 
+param_grid.step = [1e-1, 1e-2, 1e-3];
+param_grid.beta1 = [0.9, 0.95];
+param_grid.beta2 = [0.9, 0.99];
+param_grid.alpha = [0.1, 0.5, 1.0];
+
+% Run the optimization to find the best parameters
+[best_A, best_B, best_C, best_params, best_hist] = optimize_SNNCPD(X, R, param_grid);
+
+% The best parameters found
+disp(best_params);
+
+## References
+@article{sanou2024online,
+  title={Online Canonical Polyadic Decomposition: Application of Fluorescence Tensors with Nonnegative Orthogonality and Sparse Constraint},
+  author={Sanou, Isaac Wilfried and Luciani, Xavier and Redon, Roland and Mounier, St{\'e}phane},
+  journal={Optimization Algorithms-Classics and Recent Advances},
+  year={2024},
+  publisher={IntechOpen}
+}
+
+@article{sanou2022online,
+  title={Online nonnegative and sparse canonical polyadic decomposition of fluorescence tensors},
+  author={Sanou, Isaac Wilfried and Redon, Roland and Luciani, Xavier and Mounier, St{\'e}phane},
+  journal={Chemometrics and Intelligent Laboratory Systems},
+  volume={225},
+  pages={104550},
+  year={2022},
+  publisher={Elsevier}
+}
+
+
+@inproceedings{sanou2021online,
+  title={Online nonnegative canonical polyadic decomposition: Algorithms and application},
+  author={Sanou, Isaac Wilfried and Redon, Roland and Luciani, Xavier and Mounier, St{\'e}phane},
+  booktitle={2021 29th European Signal Processing Conference (EUSIPCO)},
+  pages={1805--1809},
+  year={2021},
+  organization={IEEE}
+}
+
 
 
