@@ -138,6 +138,18 @@ Returns
     MU: (vector) Learning rate for each iteration.
 
 
+
+OOSCPD - orthogonality online sparse CPD
+
+The OOSCPD_gradientNadam function implements an advanced online nonnegative tensor dictionary approximation algorithm. This method is designed for the dynamic decomposition of 3rd-order tensors, particularly useful in applications where data arrives sequentially over time. A key feature of this implementation is the enforcement of orthogonality constraints on the transformation matrices Ua and Ub, ensuring that the resulting factors are non-correlated and interpretable.
+Key Features
+
+    Online Decomposition: Efficiently updates factor matrices as new tensor data arrives, enabling real-time analysis of large-scale data.
+    Orthogonality Constraint: Enforces orthogonality on the transformation matrices Ua and Ub using QR decomposition, which enhances the interpretability and numerical stability of the factors.
+    Non-Negativity Constraint: Ensures that the factor matrices remain non-negative, which is essential for specific data types such as spectral data.
+    Sparsity Regularization: Supports L1 norm regularization on the factor matrices to enforce sparsity, useful when the true rank is unknown and overestimated.
+    NADAM Optimizer: Utilizes the NADAM optimizer, which combines Adam with Nesterov momentum, providing efficient and stable convergence.
+
 ## References
 @article{sanou2024online,
   title={Online Canonical Polyadic Decomposition: Application of Fluorescence Tensors with Nonnegative Orthogonality and Sparse Constraint},
