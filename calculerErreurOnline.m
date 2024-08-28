@@ -1,5 +1,5 @@
 function erreur = calculerErreurOnline(XDep, Da, Db, Ua, Ub, C, Va, Vb, cas, alpha)
-%% calculerErreurOnline
+%% calculerErreurOnline 
 % This function computes the reconstruction error for the online CPD model.
 % Depending on the value of 'cas', it can also include a sparsity penalty term.
 
