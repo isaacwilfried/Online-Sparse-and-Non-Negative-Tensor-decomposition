@@ -63,6 +63,44 @@ param_grid.alpha = [0.1, 0.5, 1.0];
 % The best parameters found
 disp(best_params);
 
+## Online Sparse Non-Negative CPD (OSNNCPD1)
+
+### Overview
+
+This repository includes an implementation of the Online Sparse Non-Negative Canonical Polyadic Decomposition (OSNNCPD1) algorithm. This method is designed to handle the dynamic decomposition of 3D tensors in an online manner, where new data is continuously arriving. The algorithm efficiently updates factor matrices without the need to recompute the entire decomposition from scratch for each new data point.
+
+### Algorithm Details
+
+The OSNNCPD1 algorithm is based on the method described in the paper:
+
+- **Isaac Wilfried Sanou, Roland Redon, Xavier Luciani, and Stéphane Mounier**. *Online Non-Negative and Sparse Canonical Polyadic Decomposition of Fluorescence Tensors*. Chemometrics and Intelligent Laboratory Systems, 225:104550, 2022.
+
+The algorithm involves two phases:
+
+1. **Initialization Phase**: 
+   - The initial tensor data is decomposed using the Sparse Non-Negative CPD (SNNCPD) method, establishing the initial factor matrices.
+
+2. **Online Update Phase**: 
+   - For each new incoming tensor, the factor matrices are updated online using the factor matrices from the previous step as initializations.
+   - Non-negativity constraints and sparsity are enforced during the optimization process using the NADAM optimizer, which efficiently handles the gradient updates.
+
+### Usage
+
+#### 1. Preparing the Data
+
+Load your initial tensor data and set the rank. The online algorithm will begin by decomposing this initial data.
+
+```matlab
+% Load initial tensor data
+load('initial_tensor_data.mat'); % Assume the tensor is stored in a variable called T0
+
+% Set the desired rank
+R = 7; % Example rank
+
+% Initialize the algorithm with the first tensor
+[A0, B0, C0, Da0, Db0, Va0, Vb0, hist, MU] = OSNNCPD1_gradientNadam(T0, R);
+
+
 ## References
 @article{sanou2024online,
   title={Online Canonical Polyadic Decomposition: Application of Fluorescence Tensors with Nonnegative Orthogonality and Sparse Constraint},
